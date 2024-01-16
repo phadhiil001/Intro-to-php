@@ -1,29 +1,35 @@
 body{
-    font-family:alegreya,serif;
+    font-family: 'Alegreya', serif;
     font-size:20px;
     margin:20px auto;
-    width:1230px
+    width:1230px;
+    height: 1230px;
 }
 
 h3.photographer{
-    margin:0 0 2em
+    margin:0 0 2em;
 }
 
+
 #large-images img{
-    width:100%
+    width:100%;
 }
 
 #gallery{
     display:grid;
     grid-template-columns:repeat(auto-fill,300px);
     grid-gap:10px;
-    margin-bottom:2em
+    margin-bottom:2em;
 }
 
 @media only screen and (max-width:1269px){
-    body{width:620px}
+    body{
+        width:620px;
+    }
 }
 
 @media only screen and (max-width:659px){
-    body{width:300px}
+    body{
+        width:300px;
+    }
 }

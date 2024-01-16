@@ -4,7 +4,7 @@
     
     Name: Fadlullah Jamiu-Imam
     Date: January 11th, 2024
-    Description: The code builds a dynamic image gallery using the Unsplash Image Source service. Using loops to display all your images instead of hardcoding the image tags
+    Description: The code builds a dynamic image gallery using the Unsplash Image Source service. Using loops to display all your images instead of hardcoding the image tags.
 
 ****************/
 
@@ -68,7 +68,7 @@ $config = [
 
 
     <!-- TASK 3 -->
-    
+
     <!-- A h1 element that reads “# Large Images” where # is the size of the array of local images with the $config hash. -->
     <h1><?= count($config['local_images']) ?> Large Images</h1>
 
