@@ -1,0 +1,50 @@
+body {
+    font-family: alegreya,serif;
+    font-size: 20px;
+    margin: 20px auto;
+    width: 1230px
+}
+
+h1, h2 {
+    color: #333;
+}
+
+.image {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+.image h2 {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.image-item img {
+    width: 100%; 
+    height: auto; 
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.image-item a:hover {
+    transform: scale(1.05);
+}
+
+.image-item img:hover {
+    transform: scale(1.1);
+}
+
+.image-item p {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.image-row {
+    flex-basis: 100%;
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+}
