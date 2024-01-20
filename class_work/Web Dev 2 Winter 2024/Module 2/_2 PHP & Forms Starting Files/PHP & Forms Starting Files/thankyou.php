@@ -8,6 +8,7 @@
     function filterinput() {
         return filter_input(INPUT_POST, 'studentnum', FILTER_VALIDATE_INT);
     }
+    
 ?>
 
 <!DOCTYPE html>
