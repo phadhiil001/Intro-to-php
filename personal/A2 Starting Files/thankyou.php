@@ -101,7 +101,8 @@ function validateFormData() {
         }
     }
 
-    return $errors;}
+    return $errors;
+}
 
 ?>
 

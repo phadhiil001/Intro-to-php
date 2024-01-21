@@ -1,11 +1,19 @@
-/******w************
+/********f************
     
-	Assignment 2 Javascript
-	Name:
-	Date:
-	Description:
+	Project 3 Javascript
+	Name: Oyebisi Oyekan
+	Date: 2023-11-23
+	Description: Eventlisteners were created for the add buttons and reset button.
+				The shipping information and payment information fields were validated.
+				Additionally, Regex was used to validate the postal code and email address
+				and an if statement was used such that information about the validity of the input 
+				was only shown after fulfilling the required field requirement.
+				The month was validated by checking if the selected input has a  number value.
+				The expiry date was validated using date object.
 
-*******************/
+
+
+*********************/
 
 const itemDescription = ["MacBook", "The Razer", "WD My Passport", "Nexus 7", "DD-45 Drums"];
 const itemPrice = [1899.99, 79.99, 179.99, 249.99, 119.99];
@@ -410,6 +418,8 @@ function formHasErrors() {
 	
 }
 
+
+
 /*
  * Adds an item to the cart and hides the quantity and add button for the product being ordered.
  *
@@ -581,4 +591,15 @@ function load() {
 
 // Add document load event listener
 document.addEventListener("DOMContentLoaded", load);
+
+
+
+
+
+
+
+
+
+
+
 
