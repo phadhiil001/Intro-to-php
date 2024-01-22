@@ -21,7 +21,25 @@ let orderTotal = 0;
  *          validation errors
  */
 function validate(e) {
+	// Hides all error elements on the page
+	hideErrors();
+	
 
+	// Determine if the form has errors
+	if (formHasErrors()) {
+		// Prevents the form from submitting
+		e.preventDefault();
+
+		// When using onSubmit="validate()" in markup, returning false would prevent
+		// the form from submitting
+		return false;
+	}
+
+
+	// When using onSubmit="validate()" in markup, returning true would allow
+	// the form to submit
+	return true;
+	
 }
 
 /*
@@ -209,6 +227,26 @@ function load() {
 		year.appendChild(newYearOption);
 	}
 
+	// Add event listener for the form submit
+	document.getElementById("orderform").addEventListener("submit", validate);	
+	
+	document.getElementById("orderform").addEventListener("reset", function(e) {
+		resetForm(e);
+	});
+	
+	
+	let itemsAdded = ["addMac", "addMouse", "addWD", "addNexus", "addDrums"];
+	for(let i = 0; i < itemsAdded.length; i++)
+	{
+		document.getElementById(itemsAdded[i]).addEventListener("click", function(){
+			addItemToCart(i+1);
+		});
+	}
+
+
+	hideErrors ();
+	
+	
 }
 
 // Add document load event listener

@@ -8,86 +8,23 @@
 
 ****************/
 
-// // Ensure something was set in the post
-// if(isset($_POST['fullname'])) {
-//     $content = "Thanks for your order {$_POST['fullname']}.";
-//     $note = "Here's a summary of your order:";
-// }
 
+// Assume $cartItems is an array containing cart items
+$cartItems = [
+    ['quantity' => $_POST['qty1'], 'description' => 'MacBook', 'price' => 1899.99],
+    ['quantity' => $_POST['qty2'], 'description' => 'Razer Gaming Mouse', 'price' => 79.99],
+    ['quantity' => $_POST['qty3'], 'description' => 'WD My Passport Portable HDD', 'price' => 179.99],
+    ['quantity' => $_POST['qty4'], 'description' => 'Google Nexus 7', 'price' => 249.99],
+    ['quantity' => $_POST['qty5'], 'description' => 'DD-45 Drum Kit', 'price' => 119.99],
+];
 
+// Calculate the total cost
+$totalCost = 0;
+foreach ($cartItems as $item) {
+    $totalCost += (int)$item['quantity'] * $item['price'];
+}
 
-// // Validate the form data submitted
-// function validateFormData() {
-//     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-//     if ($email === false) {
-//         echo "<p>Invalid email address</p>";
-//     } 
-
-//     $postal_code = filter_input(INPUT_POST, 'postal', FILTER_VALIDATE_REGEXP, ['options' => ['regexp' => '/^[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d$/']]);
-//     if ($postalCode === false) {
-//         echo "<p>Invalid postal code.</p>";
-//     }
-
-//     $creditCardNumber = filter_input(INPUT_POST, 'cardnumber', FILTER_VALIDATE_INT);
-//     if ($creditCardNumber === false || strlen((string) $creditCardNumber) !== 10) {
-//         echo "<p>Invalid card number</p>";
-//     }
-    
-//     $creditCardMonth = filter_input(INPUT_POST, 'month', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 12]]);
-//     if ($creditCardMonth === false) {
-//         echo "<p>Invalid credit card month</p>";
-//     }
-
-//     $creditCardYear = filter_input(INPUT_POST, 'year', FILTER_VALIDATE_INT, ['options' => ['min_range' => date('Y'), 'max_range' => date('Y') + 5]]);
-//     if ($creditCardYear === false) {
-//         echo "<p>Invalid credit card year</p>";
-//     }
-
-//     $creditCardType = filter_input(INPUT_POST, 'cardtype', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-//     if ($creditCardType === null || empty($creditCardType)) {
-//         echo "<p>You must choose a card type</p>";
-//     }
-
-//     $fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING);
-//     if ($fullname === null || empty($fullname)) {
-//         echo "<p>Required field</p>";
-//     }
-//     $city = filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING);
-//     if ($city === null || empty($city)) {
-//         echo "<p>Required field</p>";
-//     }
-//     $cardName = filter_input(INPUT_POST, 'cardname', FILTER_SANITIZE_STRING);
-//     if ($cardName === null || empty($cardName)) {
-//         echo "<p>Required field</p>";
-//     }
-
-//     $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING);
-//     if (empty($address)) {
-//         echo "<p>Required field</p>";
-//     }
-
-//     $validProvinces = ['AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'NT', 'NU', 'ON', 'PE', 'QC', 'SK', 'YT'];
-//     $province = filter_input(INPUT_POST, 'province', FILTER_SANITIZE_STRING);
-//     if (!in_array($province, $validProvinces)) {
-//         echo "Invalid province selection.";
-//     }
-
-//     $quantities = [];
-//     for ($i = 1; $i <= 5; $i++) {
-//         $qtyKey = 'qty' . $i;
-//         $quantity = filter_input(INPUT_POST, $qtyKey, FILTER_VALIDATE_INT);
-
-//         // Allow blank quantities for unordered products
-//         if ($quantity === false && $_POST[$qtyKey] !== '') {
-//             echo "<p>Invalid quantity for product $i</p>";
-//         }
-
-//         $quantities[$qtyKey] = $quantity;
-//     }
-
-// }
-
-
+$formattedTotalCost = number_format($totalCost, 2); 
 
 // Ensure something was set in the post
 if (isset($_POST['fullname'])) {
@@ -125,7 +62,7 @@ function validateFormData() {
     }
 
     $creditCardType = filter_input(INPUT_POST, 'cardtype', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    if ($creditCardType === null || empty($creditCardType)) {
+    if ($creditCardType === null || ($creditCardType)) {
         $errors[] = "You must choose a card type";
     }
 
@@ -167,90 +104,87 @@ function validateFormData() {
     return $errors;
 }
 
-// Usage
-$validationErrors = validateFormData();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="p2formstyles.css">
     <link rel="stylesheet" href="main.css">
     <title>Thanks for your order!</title>
 </head>
+
 <body>
-    <!-- Remember that alternative syntax is good and html inside php is bad -->
-    <div class="invoice">
+    <div class="invoice" id="rollingrick">
+        <?php
+        $validationErrors = validateFormData();
 
-    <?php if (empty($validationErrors)): ?>
-        <div>
-            <h1><?= $content ?></h1>
-            <h2><?= $note ?></h2>
-        </div>
-        
+        if (empty($validationErrors)) :
+        ?>
+            <div>
+                <h1><?= $content ?></h1>
+                <h2><?= $note ?></h2>
 
-        <div id="rollingrick">
-            <table>
-                <th class="bold">Address Infomation</th>
-                <tr>
-                    <td>Address:</td>
-                    <td><?= $_POST['address'] ?></td>
-                </tr>
-                <tr>
-                    <td>City:</td>
-                    <td><?= $_POST['city'] ?></td>
-                </tr>
-                <tr>
-                    <td>Province:</td>
-                    <td><?= $_POST['province'] ?></td>
-                </tr>
-                <tr>
-                    <td>Postal Code:</td>
-                    <td><?= $_POST['postal'] ?></td>
-                </tr>
-                <tr>
-                    <td>Email:</td>
-                    <td><?= $_POST['email'] ?></td>
-                </tr>
-            </table>
-            <table>
-                <th>Order Information</th>
-                <tr>
-                    <td>Quantity</td>
-                    <td>Description</td>
-                    <td>Cost</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Totals</td>
-                    <td><?= $_POST['city'] ?></td>
-                </tr>
-            </table>       
-        </div>
+                <table class="bold">
+                    <tr>
+                        <td colspan="4" class="bold">Address Information</td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="alignright">Address:</td>
+                        <td><?= $_POST['address'] ?></td>
+                        <td class="alignright">City:</td>
+                        <td><?= $_POST['city'] ?></td>
+                    </tr>
+                    <tr>
+                        <td class="alignright">Province:</td>
+                        <td><?= $_POST['province'] ?></td>
+                        <td class="alignright">Postal Code:</td>
+                        <td><?= $_POST['postal'] ?></td>
+                    </tr>
+                    <tr>
+                        <td class="alignright" colspan="2">Email:</td>
+                        <td colspan="2"><?= $_POST['email'] ?></td>
+                    </tr>
+                </table>
+                <table class="bold">
+                    <tr>
+                        <td colspan="4" class="bold">Order Information</td>
+                    </tr>
+                    <tr>
+                        <td>Quantity</td>
+                        <td colspan="2">Description</td>
+                        <td>Cost</td>
+                    </tr>
+                    <?php foreach ($cartItems as $item) : ?>
+                        <?php if ((int)$item['quantity'] > 0) : ?>
+                            <tr>
+                                <td><?= $item['quantity'] ?></td>
+                                <td colspan="2"><?= $item['description'] ?></td>
+                                <td class="alignright"><?= (int)$item['quantity'] * $item['price'] ?></td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    <tr>
+                        <td colspan="3  " class="alignright">Totals</td>
+                        <td class="alignright">$ <?= $totalCost ?></td>
+                    </tr>
+                </table>
+            </div>
 
-        <?php else: ?>
+        <?php else : ?>
             <h4>Sorry, this page can only be loaded when submitting an order.</h4>
-            
+            <ul>
+                <?php foreach ($validationErrors as $error) : ?>
+                    <li><?= $error ?></li>
+                <?php endforeach; ?>
+            </ul>
         <?php endif ?>
     </div>
-    
+
 </body>
+
 </html>
