@@ -67,17 +67,17 @@ function validateFormData() {
     }
 
     $fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING);
-    if ($fullname === null || empty($fullname)) {
+    if (empty($fullname)) {
         $errors[] = "Full Name is required";
     }
 
     $city = filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING);
-    if ($city === null || empty($city)) {
+    if (empty($city)) {
         $errors[] = "City is required";
     }
 
     $cardName = filter_input(INPUT_POST, 'cardname', FILTER_SANITIZE_STRING);
-    if ($cardName === null || empty($cardName)) {
+    if (empty($cardName)) {
         $errors[] = "Card Name is required";
     }
 
