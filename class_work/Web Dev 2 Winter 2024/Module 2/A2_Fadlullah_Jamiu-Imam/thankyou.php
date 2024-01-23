@@ -2,9 +2,9 @@
 
 /*******w******** 
     
-    Name:
-    Date:
-    Description:
+    Name: Fadlullah Jamiu-Imam
+    Date: 22nd January, 2024
+    Description: this page is the server-side validation for the website. On this page, after the user clicks on the proceed to order button, he is either directed to the page of the order mor directed to a page asking him to go back and fill out the appropriate field.
 
 ****************/
 
@@ -124,13 +124,13 @@ function validateFormData() {
 
         if (empty($validationErrors)) :
         ?>
-            <div>
+            <div class="bold">
                 <h1><?= $content ?></h1>
                 <h2><?= $note ?></h2>
 
-                <table class="bold">
+                <table>
                     <tr>
-                        <td colspan="4" class="bold">Address Information</td>
+                        <td colspan="4">Address Information</td>
                     </tr>
                     
                     <tr>
@@ -150,26 +150,28 @@ function validateFormData() {
                         <td colspan="2"><?= $_POST['email'] ?></td>
                     </tr>
                 </table>
-                <table class="bold">
+
+                <table>
                     <tr>
-                        <td colspan="4" class="bold">Order Information</td>
+                        <td colspan="3">Order Information</td>
                     </tr>
+                    
                     <tr>
                         <td>Quantity</td>
-                        <td colspan="2">Description</td>
+                        <td>Description</td>
                         <td>Cost</td>
                     </tr>
                     <?php foreach ($cartItems as $item) : ?>
                         <?php if ((int)$item['quantity'] > 0) : ?>
                             <tr>
                                 <td><?= $item['quantity'] ?></td>
-                                <td colspan="2"><?= $item['description'] ?></td>
+                                <td><?= $item['description'] ?></td>
                                 <td class="alignright"><?= (int)$item['quantity'] * $item['price'] ?></td>
                             </tr>
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <tr>
-                        <td colspan="3  " class="alignright">Totals</td>
+                        <td colspan="2" class="alignright">Totals</td>
                         <td class="alignright">$ <?= $totalCost ?></td>
                     </tr>
                 </table>

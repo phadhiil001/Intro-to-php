@@ -1,9 +1,9 @@
 /******w************
     
 	Assignment 2 Javascript
-	Name:
-	Date:
-	Description:
+	Name: Fadlullah Jamiu-Imam
+	Date: 22nd January, 2024
+	Description: I added some code to allow the user add product to cart and also disable/hide the error messages.
 
 *******************/
 
