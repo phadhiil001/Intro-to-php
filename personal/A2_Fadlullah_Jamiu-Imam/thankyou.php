@@ -2,39 +2,29 @@
 
 /*******w******** 
     
-    Name: Fadlullah Jamiu-Imam
-    Date: 22nd January, 2024
-    Description: this page is the server-side validation for the website. On this page, after the user clicks on the proceed to order button, he is either directed to the page of the order mor directed to a page asking him to go back and fill out the appropriate field.
+    Name:
+    Date:
+    Description:
 
 ****************/
 
 
 // Assume $cartItems is an array containing cart items
-$cartItems = [];
-
-// Define the product descriptions and prices
-$config = [
-    'qty1' => ['description' => 'MacBook', 'price' => 1899.99],
-    'qty2' => ['description' => 'Razer Gaming Mouse', 'price' => 79.99],
-    'qty3' => ['description' => 'WD My Passport Portable HDD', 'price' => 179.99],
-    'qty4' => ['description' => 'Google Nexus 7', 'price' => 249.99],
-    'qty5' => ['description' => 'DD-45 Drum Kit', 'price' => 119.99],
+$cartItems = [
+    ['quantity' => $_POST['qty1'], 'description' => 'MacBook', 'price' => 1899.99],
+    ['quantity' => $_POST['qty2'], 'description' => 'Razer Gaming Mouse', 'price' => 79.99],
+    ['quantity' => $_POST['qty3'], 'description' => 'WD My Passport Portable HDD', 'price' => 179.99],
+    ['quantity' => $_POST['qty4'], 'description' => 'Google Nexus 7', 'price' => 249.99],
+    ['quantity' => $_POST['qty5'], 'description' => 'DD-45 Drum Kit', 'price' => 119.99],
 ];
 
-foreach ($config as $key => $details) {
-    $quantity = isset($_POST[$key]) ? (int)$_POST[$key] : 0;
-
-    if ($quantity > 0) {
-        $cartItems[] = [
-            'quantity' => $quantity,
-            'description' => $details['description'],
-            'price' => $details['price'],
-        ];
-    }
+// Calculate the total cost
+$totalCost = 0;
+foreach ($cartItems as $item) {
+    $totalCost += (int)$item['quantity'] * $item['price'];
 }
 
-
-// $formattedTotalCost = number_format($totalCost, 2); 
+$formattedTotalCost = number_format($totalCost, 2); 
 
 // Ensure something was set in the post
 if (isset($_POST['fullname'])) {
@@ -77,17 +67,17 @@ function validateFormData() {
     }
 
     $fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING);
-    if (empty($fullname)) {
+    if ($fullname === null || empty($fullname)) {
         $errors[] = "Full Name is required";
     }
 
     $city = filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING);
-    if (empty($city)) {
+    if ($city === null || empty($city)) {
         $errors[] = "City is required";
     }
 
     $cardName = filter_input(INPUT_POST, 'cardname', FILTER_SANITIZE_STRING);
-    if (empty($cardName)) {
+    if ($cardName === null || empty($cardName)) {
         $errors[] = "Card Name is required";
     }
 
@@ -134,13 +124,13 @@ function validateFormData() {
 
         if (empty($validationErrors)) :
         ?>
-            <div class="bold">
+            <div>
                 <h1><?= $content ?></h1>
                 <h2><?= $note ?></h2>
 
-                <table>
+                <table class="bold">
                     <tr>
-                        <td colspan="4">Address Information</td>
+                        <td colspan="4" class="bold">Address Information</td>
                     </tr>
                     
                     <tr>
@@ -160,45 +150,29 @@ function validateFormData() {
                         <td colspan="2"><?= $_POST['email'] ?></td>
                     </tr>
                 </table>
-
-                <table>
+                <table class="bold">
                     <tr>
-                        <td colspan="3">Order Information</td>
+                        <td colspan="4" class="bold">Order Information</td>
                     </tr>
-                    
                     <tr>
                         <td>Quantity</td>
-                        <td>Description</td>
+                        <td colspan="2">Description</td>
                         <td>Cost</td>
                     </tr>
-                    <?php 
-
-                    $totalCost = 0;
-                    foreach ($cartItems as $item) : 
-                        $itemCost = $item['quantity'] * $item['price'];
-                        $totalCost += $itemCost;
-
-                    ?>
-                        <tr>
+                    <?php foreach ($cartItems as $item) : ?>
+                        <?php if ((int)$item['quantity'] > 0) : ?>
+                            <tr>
                                 <td><?= $item['quantity'] ?></td>
-                                <td><?= $item['description'] ?></td>
+                                <td colspan="2"><?= $item['description'] ?></td>
                                 <td class="alignright"><?= (int)$item['quantity'] * $item['price'] ?></td>
-                        </tr>
+                            </tr>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                     <tr>
-                        <td colspan="2" class="alignright">Totals</td>
+                        <td colspan="3  " class="alignright">Totals</td>
                         <td class="alignright">$ <?= $totalCost ?></td>
                     </tr>
                 </table>
-                <?php
-                if ($totalCost >= 20000) 
-                {
-                    echo '<div id="rollingrick">';
-                    echo '<h2>Congrats on the big order. Rick Astley congratulates you.</h2>';
-                    echo '<iframe width="600" height="475" src="//www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen=""></iframe>';
-                    echo '</div>';
-                }
-                ?>
             </div>
 
         <?php else : ?>
@@ -209,8 +183,6 @@ function validateFormData() {
                 <?php endforeach; ?>
             </ul>
         <?php endif ?>
-
-        
     </div>
 
 </body>
