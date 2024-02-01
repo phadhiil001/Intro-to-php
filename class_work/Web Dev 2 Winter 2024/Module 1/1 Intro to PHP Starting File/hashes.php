@@ -30,5 +30,13 @@
     foreach($employees as $employee){
     echo "<p>{$employee['name']} is {$employee['position']}.</p>";
     }
+
+    $words = ['one','two','buckle','my','shoe'];
+
+foreach ($words as $word){
+
+  echo $word . ' ';
+
+}
     
 ?>

@@ -1,4 +1,5 @@
  <?php
+  // session_start();
 
   define('ADMIN_LOGIN','wally');
 
@@ -16,8 +17,11 @@
 
     exit("Access Denied: Username and password required.");
 
-  }
+  } 
 
-   
+   $_SESSION['authenticated'] = true;
 
 ?>
+
+
+
