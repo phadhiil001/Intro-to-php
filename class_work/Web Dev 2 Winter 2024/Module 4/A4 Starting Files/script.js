@@ -1,127 +1,57 @@
 // /******w**************
     
 //     Assignment 4 Javascript
-//     Name:
-//     Date:
-//     Description:
+//     Name: Fadlullah Jamiu-Imam
+//     Date: February 13th, 2023
+//     Description: The purpose of this assignment is to create a program that displays the data from the api using AJAX Javascript 
 
 // *********************/
-
-// document.addEventListener('DOMContentLoaded', function () {
-//     document.getElementById('searchButton').addEventListener('click', searchPermits);
-
-
-//     // Function to handle search when links are clicked
-//     function searchFor(term) {
-//         document.getElementById('searchInput').value = term;
-//         searchPermits();
-//     }
-
-//     function searchPermits() {
-//         var searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-
-//         var  xhr = new XMLHttpRequest();
-//         // Get request to retrieve data from API
-//         xhr.open('GET', 'https://data.winnipeg.ca/resource/it4w-cpf4.json', true);
-
-//         xhr.onload = function () {
-//             if (this.status == 200) {
-//                 var data = JSON.parse(this.responseText);
-
-//                 var filterData = data.filter(function (item) {
-//                     // Check if the neighbouthood name contains the search  term
-//                     return item.neighbourhood_name.toLowerCase().includes(searchTerm);
-//                 });
-
-//                 displayPermits(filterData);
-//             } else {
-//                 console.log("Error: " + this.status);
-//             }
-//         };
-
-//         xhr.send();
-//     }
-    
-
-//     function displayPermits(data)  {
-//         var output = `
-//             <table class="data">
-//                 <tr>
-//                     <th>Issue Date</th>
-//                     <th>Permit Type</th>
-//                     <th>Subtype</th>
-//                     <th>Neighbourhood</th>
-//                     <th>Permit Number</th>
-//                     <th>Ward</th>
-//                 </tr>`;
-
-//         for (var i in data) {
-//             output += `
-//                 <tr>
-//                     <td>${data[i].issue_date}</td>
-//                     <td>${data[i].permit_type}</td>
-//                     <td>${data[i].sub_type}</td>
-//                     <td>${data[i].neighbourhood_name}</td>
-//                     <td>${data[i].permit_number}</td>
-//                     <td>${data[i].ward}</td>
-//                 </tr>`;
-//         }
-
-//         output += `</table>`;
-
-//         document.getElementById('data').innerHTML = output;
-//     }
-// });
 
 
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('searchButton').addEventListener('click', searchPermits);
 
-    // Function to handle search when links are clicked
-    function searchFor(term) {
-        document.getElementById('searchInput').value = term;
-        searchPermits();
-    }
-
-    document.getElementById('stJohns').addEventListener('click', function () {
-        searchFor("ST. JOHN'S");
-    });
-
-    document.getElementById('grassie').addEventListener('click', function () {
-        searchFor("GRASSIE");
-    });
-
-    document.getElementById('brucePark').addEventListener('click', function () {
-        searchFor("BRUCE PARK");
-    });
+    document.getElementById('searchInput').value = '';
 
     function searchPermits() {
         var searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
 
+        var apiUrl = `https://data.winnipeg.ca/resource/it4w-cpf4.json?$where=lower(permit_type) LIKE '%25${searchTerm}%25'&$order=issue_date DESC&$limit=100`;
+
         var xhr = new XMLHttpRequest();
+
         // Get request to retrieve data from API
-        xhr.open('GET', 'https://data.winnipeg.ca/resource/it4w-cpf4.json', true);
+        xhr.open('GET', apiUrl, true);
 
         xhr.onload = function () {
             if (this.status == 200) {
-                var data = JSON.parse(this.responseText);
+                let data = JSON.parse(this.responseText);
 
-                var filteredData = data.filter(function (item) {
-                    // Check if the neighbourhood name contains the search term
-                    return item.neighbourhood_name && item.neighbourhood_name.toLowerCase().includes(searchTerm);
-                });
-
-                displayPermits(filteredData); // Corrected function name
+                if (searchTerm === '' || data.length === 0) {
+                    displayErrorMessage("Please enter a permit type.");
+                } else {
+                    if (data.length === 0) {
+                        displayErrorMessage("No permits found for the specified type.");
+                    } else {
+                        displayPermits(data);
+                    }
+                }
             } else {
-                console.log("Error: " + this.status);
+                displayErrorMessage("Error loading permits. Status: " + this.status + " - " + this.statusText);
             }
+        };
+
+        xhr.onerror = function () {
+            displayErrorMessage("Error loading permits. Network error occurred.");
         };
 
         xhr.send();
     }
 
-    function displayPermits(data) { // Corrected function name
-        var output = `
+    function displayPermits(data) {
+        var output = `<h2>${data.length} Building Permit Issued since 2010</h2>`;
+
+        output += `
             <table class="data">
                 <tr>
                     <th>Issue Date</th>
@@ -129,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <th>Subtype</th>
                     <th>Neighbourhood</th>
                     <th>Permit Number</th>
+                    <th>Ward</th>
                 </tr>`;
 
         for (var i in data) {
@@ -139,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <td>${data[i].sub_type}</td>
                     <td>${data[i].neighbourhood_name}</td>
                     <td>${data[i].permit_number}</td>
+                    <td>${data[i].ward}</td>
                 </tr>`;
         }
 
@@ -146,4 +78,71 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.getElementById('data').innerHTML = output;
     }
+
+    function displayErrorMessage(message) {
+        document.getElementById('data').innerHTML = `<p class="error-message">${message}</p>`;
+    }
+
+
+
+    document.getElementById('loadAll').addEventListener('click', loadAll);
+
+    function loadAll() {
+
+        let xhr = new XMLHttpRequest();
+        
+        xhr.open('GET', 'https://data.winnipeg.ca/resource/it4w-cpf4.json', true);
+
+        xhr.onload = function () {
+            if (this.status == 200) {
+                let data = JSON.parse(this.responseText);
+
+                displayAll(data);
+            } else {
+                displayErrorMessage("Error loading permits. Status: " + this.status + " - " + this.statusText);
+            }
+        };
+
+        xhr.send();
+    }
+
+    function displayAll(data) {
+        let output = `
+            <p>${data.length} is the total number of Building Permit Issued since 2010</p>
+            <table class="data">
+                <tr>
+                    <th>Issue Date</th>
+                    <th>Permit Type</th>
+                    <th>Subtype</th>
+                    <th>Neighbourhood</th>
+                    <th>Permit Number</th>
+                    <th>Permit Group</th>
+                    <th>Work Type</th>
+                    <th>Community</th>
+                    <th>Ward</th>
+                    <th>Final Date</th>
+                </tr>`;
+    
+        for (let i in data) {
+            output += `
+                <tr>
+                    <td>${data[i].issue_date}</td>
+                    <td>${data[i].permit_type}</td>
+                    <td>${data[i].sub_type}</td>
+                    <td>${data[i].neighbourhood_name}</td>
+                    <td>${data[i].permit_number}</td>
+                    <td>${data[i].permit_group}</td>
+                    <td>${data[i].work_type}</td>
+                    <td>${data[i].community}</td>
+                    <td>${data[i].ward}</td>
+                    <td>${data[i].final_date}</td>
+                </tr>`;
+        }
+    
+        output += `</table>`;
+    
+        document.getElementById('data').innerHTML = output;
+    }
+    
 });
+

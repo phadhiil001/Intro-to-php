@@ -1,9 +1,9 @@
 <!-------w------------
 
     Assignment 4
-    Name: 
-    Date:
-    Description:
+    Name: Fadlullah Jamiu-Imam
+    Date: February 13th, 2023
+    Description: The purpose of this assignment is to create a program that displays the data from the api using AJAX
 
 --------------------->
 
@@ -15,18 +15,26 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<script src="script.js"></script>
 		<link rel="stylesheet" href="main.css" />
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 		<title>My Open Data Assignment</title>
 	</head>
 	<body>
-		<h1>Winnipeg's Detailed Building Permit Issues since 2010</h1>
-		<p>City of Winnipeg building permits issued since 2010, containing most information about the permit with the exception of declared construction value.</p>
-		<div id="building_permit_data">
-			<label for="searchInput">Search for permit by Neighbourhood Name</label>
-			<input type="text" id="searchInput">
-			<button id="searchButton">Search</button>
-			 <p class="help">Try searching for <a href="#" id="stJohns">ST. JOHN'S</a>, or <a class="query" id="grassie">GRASSIE</a>, or <a class="query" id="brucePark">BRUCE PARK</a>.</p>
-    	</div>
-		
-		<table id="data"></table>
+		<section class="section">
+			<div class="container">
+				<h1 class="title">Winnipeg's Detailed Building Permit Issued since 2010</h1>
+				<h2 class="subtitle">City of Winnipeg building permits issued since 2010, containing most information about the permit with the exception of declared construction value.</h2><br>
+	
+				<form class="box">
+					<label for="searchInput" class="label">Search for permit by Permit-Type</label>
+					<input type="text" id="searchInput" placeholder="Enter a permit type">
+					<button id="searchButton">Search</button><br>
+					<small class="help">Try searching for Housing, or Accessory Structures or Retail.</small>
+				</form>
+			
+				<table id="data"></table>
+	
+				<p>To find the complete data for <a href="http:#" id="loadAll">Winnipeg's Detailed Building Permit Issues since 2010</a></p>
+			</div>
+		</section>
 	</body>
-</html>
+</html> 
