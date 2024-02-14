@@ -9,24 +9,36 @@
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('searchButton').addEventListener('click', searchPermits);
+    // Add event listener to the search button
+    document.getElementById('searchButton').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+        searchPermits();
+    });
 
+    // Set the value of the search input field to an empty string
     document.getElementById('searchInput').value = '';
 
+    // Function to search permits
     function searchPermits() {
-        var searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+        let searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+        // Encode the search term to handle special characters
+        let encodedSearchTerm = encodeURIComponent(searchTerm);
+        // Construct the API URL with encoded search term
+        const apiUrl = 'https://data.winnipeg.ca/resource/it4w-cpf4.json?' +
+            `$where=lower(permit_type) LIKE '%${encodedSearchTerm}%'` +
+            '&$order=issue_date DESC' +
+            '&$limit=100';
+        const encodedURL = encodeURI(apiUrl);
 
-        var apiUrl = `https://data.winnipeg.ca/resource/it4w-cpf4.json?$where=lower(permit_type) LIKE '%25${searchTerm}%25'&$order=issue_date DESC&$limit=100`;
-
-        var xhr = new XMLHttpRequest();
-
-        // Get request to retrieve data from API
-        xhr.open('GET', apiUrl, true);
-
-        xhr.onload = function () {
-            if (this.status == 200) {
-                let data = JSON.parse(this.responseText);
-
+        // Fetch request to retrieve data from API
+        fetch(encodedURL)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error loading permits. Status: ${response.status} - ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
                 if (searchTerm === '' || data.length === 0) {
                     displayErrorMessage("Please enter a permit type.");
                 } else {
@@ -36,20 +48,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         displayPermits(data);
                     }
                 }
-            } else {
-                displayErrorMessage("Error loading permits. Status: " + this.status + " - " + this.statusText);
-            }
-        };
-
-        xhr.onerror = function () {
-            displayErrorMessage("Error loading permits. Network error occurred.");
-        };
-
-        xhr.send();
+            })
+            .catch(error => {
+                displayErrorMessage("Error loading permits. " + error.message);
+            });
     }
 
+    // Function to display permits
     function displayPermits(data) {
-        var output = `<h2>${data.length} Building Permit Issued since 2010</h2>`;
+        let output = `<h2>${data.length} Building Permit Issued since 2010</h2>`;
 
         output += `
             <table class="data">
@@ -62,50 +69,57 @@ document.addEventListener('DOMContentLoaded', function () {
                     <th>Ward</th>
                 </tr>`;
 
-        for (var i in data) {
+        data.forEach(item => {
             output += `
                 <tr>
-                    <td>${data[i].issue_date}</td>
-                    <td>${data[i].permit_type}</td>
-                    <td>${data[i].sub_type}</td>
-                    <td>${data[i].neighbourhood_name}</td>
-                    <td>${data[i].permit_number}</td>
-                    <td>${data[i].ward}</td>
+                    <td>${item.issue_date}</td>
+                    <td>${item.permit_type}</td>
+                    <td>${item.sub_type}</td>
+                    <td>${item.neighbourhood_name}</td>
+                    <td>${item.permit_number}</td>
+                    <td>${item.ward}</td>
                 </tr>`;
-        }
+        });
 
         output += `</table>`;
 
         document.getElementById('data').innerHTML = output;
     }
 
+
+// This part of the code retrive all data from the api 
+
+    // Function to display error messages
     function displayErrorMessage(message) {
         document.getElementById('data').innerHTML = `<p class="error-message">${message}</p>`;
     }
 
-
-
+    // Event listener for the "Load All" button
     document.getElementById('loadAll').addEventListener('click', loadAll);
 
+    // Function to load all permits
     function loadAll() {
+        // URL to fetch all permits
+        const apiUrl = 'https://data.winnipeg.ca/resource/it4w-cpf4.json';
+        const encodedURL = encodeURI(apiUrl);
 
-        let xhr = new XMLHttpRequest();
-        
-        xhr.open('GET', 'https://data.winnipeg.ca/resource/it4w-cpf4.json', true);
-
-        xhr.onload = function () {
-            if (this.status == 200) {
-                let data = JSON.parse(this.responseText);
-
+        // Fetch request to retrieve all data from API
+        fetch(encodedURL)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error loading permits. Status: ${response.status} - ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
                 displayAll(data);
-            } else {
-                displayErrorMessage("Error loading permits. Status: " + this.status + " - " + this.statusText);
-            }
-        };
-
-        xhr.send();
+            })
+            .catch(error => {
+                displayErrorMessage("Error loading permits. " + error.message);
+            });
     }
 
+    // Function to display all permits
     function displayAll(data) {
         let output = `
             <p>${data.length} is the total number of Building Permit Issued since 2010</p>
@@ -123,26 +137,24 @@ document.addEventListener('DOMContentLoaded', function () {
                     <th>Final Date</th>
                 </tr>`;
     
-        for (let i in data) {
+        data.forEach(item => {
             output += `
                 <tr>
-                    <td>${data[i].issue_date}</td>
-                    <td>${data[i].permit_type}</td>
-                    <td>${data[i].sub_type}</td>
-                    <td>${data[i].neighbourhood_name}</td>
-                    <td>${data[i].permit_number}</td>
-                    <td>${data[i].permit_group}</td>
-                    <td>${data[i].work_type}</td>
-                    <td>${data[i].community}</td>
-                    <td>${data[i].ward}</td>
-                    <td>${data[i].final_date}</td>
+                    <td>${item.issue_date}</td>
+                    <td>${item.permit_type}</td>
+                    <td>${item.sub_type}</td>
+                    <td>${item.neighbourhood_name}</td>
+                    <td>${item.permit_number}</td>
+                    <td>${item.permit_group}</td>
+                    <td>${item.work_type}</td>
+                    <td>${item.community}</td>
+                    <td>${item.ward}</td>
+                    <td>${item.final_date}</td>
                 </tr>`;
-        }
+        });
     
         output += `</table>`;
     
         document.getElementById('data').innerHTML = output;
     }
-    
 });
-
